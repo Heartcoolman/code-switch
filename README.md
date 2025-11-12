@@ -14,7 +14,7 @@
 
 代理内部只暴露与 IDE 兼容的关键端点：/v1/messages 转发到配置的 Claude 供应商，/responses 转发到 Codex 供应商；请求由 proxyHandler 动态挑选符合当前优先级与启用状态的 provider，并在失败时自动回退。
 
-以上流程让 cli 看到的是一个固定的本地地址，而真实请求会被 Code Switch 透明地路由到你在应用里维护的供应商列表；更多背景可参阅 deepwiki 设计笔记。
+以上流程让 cli 看到的是一个固定的本地地址，而真实请求会被 Code Switch 透明地路由到你在应用里维护的供应商列表
 
 ## 下载
 
