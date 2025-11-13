@@ -35,6 +35,9 @@ jobs:
       - name: Update build assets
         run: wails3 task common:update:build-assets
 
+      - name: Generate bindings
+        run: wails3 task common:generate:bindings
+
       - name: Build macOS ${{ matrix.arch }}
         run: env ARCH=${{ matrix.arch }} wails3 task package
 
@@ -83,6 +86,9 @@ jobs:
 
       - name: Update build assets
         run: wails3 task common:update:build-assets
+
+      - name: Generate bindings
+        run: wails3 task common:generate:bindings
 
       - name: Build Windows amd64
         run: |
