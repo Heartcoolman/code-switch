@@ -2,7 +2,6 @@
 # When you update `info` or `fileAssociations`, run `wails3 task common:update:build-assets` to update the assets.
 # Note that this will overwrite any changes you have made to the assets.
 version: '3'
-
 # This information is used to generate the build assets.
 info:
   companyName: "Code Switch" # The name of the company
@@ -11,8 +10,7 @@ info:
   description: "Manage Claude & Codex relays, providers, and request logs." # The application description
   copyright: "(c) 2025, Code Switch" # Copyright text
   comments: "Code Switch desktop relay controller" # Comments
-  version: "0.1.0" # The application version
-
+  version: "0.1.8" # The application version
 # Dev mode configuration
 dev_mode:
   root_path: .
@@ -42,7 +40,6 @@ dev_mode:
       type: blocking
     - cmd: wails3 task run
       type: primary
-
 # File Associations
 # More information at: https://v3.wails.io/noit/done/yet
 fileAssociations:

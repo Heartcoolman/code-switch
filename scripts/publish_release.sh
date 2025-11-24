@@ -13,6 +13,7 @@ fi
 
 TAG="$1"
 NOTES="${2:-RELEASE_NOTES.md}"
+VERSION_VALUE="${TAG#v}"
 
 if [ ! -f "$NOTES" ]; then
   echo "Release notes file '$NOTES' not found" >&2
@@ -20,6 +21,7 @@ if [ ! -f "$NOTES" ]; then
 fi
 
 MAC_APP_PRIMARY="bin/CodeSwitch.app"
+CONFIG_FILE="build/config.yml"
 MAC_ARCHS=("arm64" "amd64")
 MAC_ZIPS=()
 
@@ -50,7 +52,9 @@ package_macos_arch() {
   MAC_ZIPS+=("$zip_path")
 }
 
-perl -0pi -e "s/const\\s+AppVersion\\s*=\\s*\"[^\"]*\"/const AppVersion = \"$TAG\"/" version_service.go
+perl -0pi -e 's/const\s+AppVersion\s*=\s*"[^"]*"/const AppVersion = "'"$TAG"'"/' version_service.go
+
+yq -i '.info.version = "'"$VERSION_VALUE"'"' "$CONFIG_FILE"
 
 wails3 task common:update:build-assets
 for arch in "${MAC_ARCHS[@]}"; do

@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/daodao97/xgo/xdb"
+	"github.com/daodao97/xgo/xlog"
 	"github.com/daodao97/xgo/xrequest"
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
@@ -32,12 +33,15 @@ func NewProviderRelayService(providerService *ProviderService, addr string) *Pro
 	}
 
 	home, _ := os.UserHomeDir()
+	const sqliteOptions = "?cache=shared&mode=rwc&_busy_timeout=5000&_journal_mode=WAL"
 
 	if err := xdb.Inits([]xdb.Config{
 		{
-			Name:   "default",
-			Driver: "sqlite",
-			DSN:    filepath.Join(home, ".code-switch", "app.db?cache=shared&mode=rwc"),
+			Name:        "default",
+			Driver:      "sqlite",
+			DSN:         filepath.Join(home, ".code-switch", "app.db"+sqliteOptions),
+			MaxOpenConn: 1,
+			MaxIdleConn: 1,
 		},
 	}); err != nil {
 		fmt.Printf("初始化数据库失败: %v\n", err)
@@ -257,7 +261,8 @@ func (prs *ProviderRelayService) proxyHandler(kind string, endpoint string) gin.
 		if lastErr != nil {
 			message = fmt.Sprintf("%s: %s", message, lastErr.Error())
 		}
-		c.JSON(http.StatusBadGateway, gin.H{"error": message})
+		xlog.Error("all is error")
+		c.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
 }
 
@@ -307,8 +312,7 @@ func (prs *ProviderRelayService) forwardRequest(
 
 	req := xrequest.New().
 		SetHeaders(headers).
-		SetQueryParams(query).
-		SetRetry(1, 500*time.Millisecond)
+		SetQueryParams(query)
 
 	reqBody := bytes.NewReader(bodyBytes)
 	req = req.SetBody(reqBody)
@@ -402,6 +406,13 @@ func ensureRequestLogTable() error {
 }
 
 func ensureRequestLogTableWithDB(db *sql.DB) error {
+	if _, err := db.Exec("PRAGMA busy_timeout=5000"); err != nil {
+		return err
+	}
+	if _, err := db.Exec("PRAGMA journal_mode=WAL"); err != nil {
+		return err
+	}
+
 	const createTableSQL = `CREATE TABLE IF NOT EXISTS request_log (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		platform TEXT,
