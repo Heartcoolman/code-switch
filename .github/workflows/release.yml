@@ -159,28 +159,25 @@ jobs:
         with:
           files: release-assets/*
           body: |
-            ## 新增功能
+            ## 更新亮点
 
-            ### 优先级分组调度
+            💰 **新增 Claude Opus 4.5 计费支持**
 
-            新增 Level 字段（1-10）用于供应商优先级分组，实现更灵活的降级策略。
+            添加 `claude-opus-4-5-20251101` 模型价格数据，支持完整的费用计算。
 
-            **主要改进**：
-            - 后端：重构调度逻辑为两层循环架构，优先尝试高优先级分组
-            - 前端：添加 Level 下拉选择器和可视化徽章（L1-L10）
-            - 国际化：支持中英文 Level 描述文本
-            - 测试：新增单元测试覆盖分组、排序和序列化逻辑
-
-            **使用场景**：
-            - 成本优化：低成本供应商优先，高成本作为备份
-            - 稳定性保障：高质量供应商优先，社区供应商降级
-            - 地域分组：国内供应商优先，国外供应商备份
-
-            **向后兼容**：未设置 Level 的供应商自动默认为 Level 1。
+            ### 价格详情
+            | 类型 | 价格 |
+            |------|------|
+            | Input | $5.00 / MTokens |
+            | Output | $25.00 / MTokens |
+            | Cache Read | $0.50 / MTokens |
+            | Cache Creation | $6.25 / MTokens |
+            | Batch Input | $2.50 / MTokens |
+            | Batch Output | $12.50 / MTokens |
 
             ## 安装说明
 
-            - **Windows**：下载 `codeswitch-amd64-installer.exe` 运行安装，或下载 `codeswitch.exe` 直接运行
+            - **Windows**：下载 `CodeSwitch-amd64-installer.exe` 运行安装，或下载 `CodeSwitch.exe` 直接运行
             - **macOS (Apple Silicon)**：下载 `codeswitch-macos-arm64.zip`
             - **macOS (Intel)**：下载 `codeswitch-macos-amd64.zip`
           draft: false
